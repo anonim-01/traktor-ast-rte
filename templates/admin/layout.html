@@ -47,6 +47,11 @@
                 <span>Reklam Taraması</span>
                 <span class="pill pill-new">Yeni</span>
               </a>
+              <a class="nav-link{% if request.endpoint == 'admin.ip_blocker_panel' %} active{% endif %}" href="{{ url_for('admin.ip_blocker_panel') }}">
+                <i class="fa-solid fa-ban"></i>
+                <span>IP Engelleme</span>
+                <span class="pill pill-new">Yeni</span>
+              </a>
               <a class="nav-link{% if request.endpoint == 'admin.settings' %} active{% endif %}" href="{{ url_for('admin.settings') }}">
                 <i class="fe fe-settings"></i>
                 <span>Panel Ayarları</span>

@@ -10,6 +10,7 @@ from flask import Blueprint, flash, redirect, render_template, request, session,
 from ..config import ADMIN_STATIC_DIR
 from ..database import get_cursor
 from ..detectors import detect_browser
+from ..ip_blocker import ip_blocker
 from ..utils import get_client_ip
 
 admin_bp = Blueprint(
@@ -294,3 +295,48 @@ def settings():
             flash("Tanımsız ayar isteği.", "warning")
         return redirect(url_for("admin.settings"))
     return render_template("admin/settings.html", site=site_settings)
+
+
+@admin_bp.route("/ip-blocker", methods=["GET", "POST"])
+@_login_required
+def ip_blocker_panel():
+    _record_panel_status("IP Engelleme")
+    
+    if request.method == "POST":
+        action = request.form.get("action")
+        
+        if action == "add_ip":
+            ip_address = (request.form.get("ip_address") or "").strip()
+            if ip_address:
+                ip_blocker.add_ip(ip_address)
+                flash(f"IP adresi engellendi: {ip_address}", "success")
+            else:
+                flash("Geçerli bir IP adresi girin.", "danger")
+        
+        elif action == "add_range":
+            cidr = (request.form.get("cidr") or "").strip()
+            if cidr:
+                ip_blocker.add_range(cidr)
+                flash(f"IP aralığı engellendi: {cidr}", "success")
+            else:
+                flash("Geçerli bir CIDR aralığı girin (örn: 192.168.1.0/24).", "danger")
+        
+        elif action == "remove_ip":
+            ip_address = (request.form.get("ip_address") or "").strip()
+            if ip_address:
+                ip_blocker.remove_ip(ip_address)
+                flash(f"IP engeli kaldırıldı: {ip_address}", "info")
+            else:
+                flash("Geçerli bir IP adresi girin.", "danger")
+        
+        return redirect(url_for("admin.ip_blocker_panel"))
+    
+    # Engelli IP'leri ve aralıkları listele
+    blocked_ips = [str(ip) for ip in ip_blocker.blocked_ips]
+    blocked_ranges = [str(net) for net in ip_blocker.blocked_ranges]
+    
+    return render_template(
+        "admin/ip-blocker.html",
+        blocked_ips=blocked_ips,
+        blocked_ranges=blocked_ranges
+    )
