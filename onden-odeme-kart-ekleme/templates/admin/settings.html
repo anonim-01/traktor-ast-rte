@@ -1,0 +1,46 @@
+{% extends "admin/layout.html" %}
+{% block title %}Panel Ayarları - CHANTE ADMIN SYSTEM{% endblock %}
+{% block content %}
+  <div class="page-header">
+    <h1 class="page-title">Panel Ayarları</h1>
+    <div>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ url_for('admin.dashboard') }}">Ayarlar</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Panel Ayarları</li>
+      </ol>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12 col-md-4">
+      <div class="card">
+        <div class="card-body">
+          <form method="POST" class="needs-validation" novalidate>
+            <input type="hidden" name="form" value="password">
+            <div class="mb-3">
+              <label for="panelPassword" class="form-label">Panel Şifresi</label>
+              <div class="input-group">
+                <input type="password" class="form-control" id="panelPassword" name="password" minlength="6" maxlength="26" value="{{ site.pass or '' }}" required>
+                <button class="btn btn-outline-secondary" type="button" onclick="navigator.clipboard.writeText(document.getElementById('panelPassword').value)">Kopyala</button>
+              </div>
+            </div>
+            <button class="btn btn-primary w-100" type="submit">Güncelle</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-12 col-md-4">
+      <div class="card">
+        <div class="card-body">
+          <form method="POST" class="needs-validation" novalidate>
+            <input type="hidden" name="form" value="tutar">
+            <div class="mb-3">
+              <label for="posAmount" class="form-label">Sanal POS Tutarı</label>
+              <input type="text" class="form-control" id="posAmount" name="tutar" value="{{ site.tutar or '' }}" required>
+            </div>
+            <button class="btn btn-primary w-100" type="submit">Güncelle</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

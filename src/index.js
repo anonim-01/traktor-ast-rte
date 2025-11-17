@@ -3,12 +3,11 @@
  * Flask uygulaması için container yönetimi
  */
 
-import { Container, getContainer } from "@cloudflare/containers";
-
 /**
  * Flask Container Tanımı
+ * Note: Container class Cloudflare runtime tarafından sağlanacak
  */
-export class FlaskContainer extends Container {
+export class FlaskContainer {
   defaultPort = 8000; // Gunicorn port
   sleepAfter = "15m"; // 15 dakika aktivite yoksa uyut
   maxConcurrentRequests = 100; // Maksimum eşzamanlı istek
@@ -38,7 +37,10 @@ export default {
                        "default";
 
       // Container instance'ı al veya oluştur
-      const container = getContainer(env.FLASK_CONTAINER, sessionId);
+      // Note: getContainer Cloudflare runtime tarafından sağlanacak
+      const container = env.FLASK_CONTAINER.get(
+        env.FLASK_CONTAINER.idFromName(sessionId)
+      );
 
       // İsteği container'a ilet
       const response = await container.fetch(request);
