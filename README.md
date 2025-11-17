@@ -1,6 +1,6 @@
 # Pyhton E-Devlet Klonu
 
-Bu klasör, PHP ile yazılmış `edevlet` uygulamasının Flask tabanlı birebir akışını sunar. Her rota, orijinal dosya isimleriyle eşleştirilmiş olup aynı form adımları ve veritabanı güncellemelerini uygular.
+Bu klasör, py ile yazılmış `edevlet` uygulamasının Flask tabanlı birebir akışını sunar. Her rota, orijinal dosya isimleriyle eşleştirilmiş olup aynı form adımları ve veritabanı güncellemelerini uygular.
 
 ## Özellikler
 
