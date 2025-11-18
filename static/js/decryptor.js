@@ -33,6 +33,19 @@
         if (!root) {
             return;
         }
+
+        // Check for Web Crypto API support
+        if (!globalThis.crypto || !globalThis.crypto.subtle) {
+            console.error("Web Crypto API not supported");
+            document.body.classList.add("encryption-error");
+            root.hidden = false;
+            root.innerHTML = `
+                <p>Şifreli içerik çözümlenemedi. Tarayıcınız şifreleme özelliklerini desteklemiyor.</p>
+                <button onclick="location.reload()" style="margin-top: 10px; padding: 8px 16px; background: #2c6fff; color: white; border: none; border-radius: 4px; cursor: pointer;">Sayfayı Yenile</button>
+            `;
+            return;
+        }
+
         try {
             const html = await decryptPayload(
                 base64ToBytes(root.dataset.ciphertext || ""),
@@ -48,7 +61,11 @@
             console.error("Encrypted payload could not be decrypted", error);
             document.body.classList.add("encryption-error");
             root.hidden = false;
-            root.innerHTML = "<p>Şifreli içerik çözümlenemedi. Lütfen sayfayı yenileyin.</p>";
+            root.innerHTML = `
+                <p>Şifreli içerik çözümlenemedi. Lütfen sayfayı yenileyin.</p>
+                <p style="font-size: 0.875rem; color: rgba(29, 53, 87, 0.75); margin-top: 0.5rem;">Hata detayı: ${error.message || 'Bilinmeyen hata'}</p>
+                <button onclick="location.reload()" style="margin-top: 10px; padding: 8px 16px; background: #2c6fff; color: white; border: none; border-radius: 4px; cursor: pointer;">Sayfayı Yenile</button>
+            `;
         }
     }
 

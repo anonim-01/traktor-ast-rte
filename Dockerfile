@@ -18,6 +18,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Uygulama dosyalarını kopyala
 COPY . .
 
+# SSL sertifika dizini oluştur
+RUN mkdir -p /app/certs
+
 # Log dizini oluştur
 RUN mkdir -p /app/logs
 

@@ -1,34 +1,18 @@
 #:schema node_modules/wrangler/config-schema.json
 name = "traktor-ast-rte"
 compatibility_date = "2024-11-15"
-compatibility_flags = ["nodejs_compat"]
+compatibility_flags = ["nodejs_compat", "python_workers"]
 account_id = "ccf119a16f7abfd37a26efe65e4a1077"
-main = "src/index.js"
+main = "worker.py"
 
 [env.staging]
 name = "traktor-ast-rte-staging"
-
-[observability]
-enabled = true
-
-# Flask Container Configuration
-[[containers]]
-class_name = "FlaskContainer"
-image = "./Dockerfile"
-max_instances = 10
-
-# Durable Objects for Container Orchestration
-[[durable_objects.bindings]]
-class_name = "FlaskContainer"
-name = "FLASK_CONTAINER"
-
-# Container Migrations
-[[migrations]]
-new_sqlite_classes = ["FlaskContainer"]
-tag = "v1"
 
 # D1 Database Binding
 [[d1_databases]]
 binding = "DAYKO_D1"
 database_name = "dayko_aidat"
 database_id = "ab701183-34b6-4e2d-ae34-0c3bfeb8c46b"
+
+[observability]
+enabled = true

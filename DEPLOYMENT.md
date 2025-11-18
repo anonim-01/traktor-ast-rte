@@ -214,6 +214,25 @@ sudo apt install certbot python3-certbot-nginx -y
 sudo certbot --nginx -d your-domain.com -d www.your-domain.com
 ```
 
+#### Alternatif: Self-Signed SSL Sertifikası (Development/Test)
+
+Eğer Let's Encrypt kullanmak istemiyorsanız, self-signed sertifika oluşturabilirsiniz:
+
+```bash
+# SSL sertifika dizini oluştur
+sudo mkdir -p /var/www/traktor-ast-rte/certs
+
+# Self-signed sertifika oluştur
+sudo openssl req -x509 -newkey rsa:4096 -keyout /var/www/traktor-ast-rte/certs/key.pem -out /var/www/traktor-ast-rte/certs/cert.pem -days 365 -nodes -subj "/C=TR/ST=Istanbul/L=Istanbul/O=Traktor/CN=your-domain.com"
+
+# Dosya izinlerini ayarla
+sudo chmod 600 /var/www/traktor-ast-rte/certs/key.pem
+sudo chmod 644 /var/www/traktor-ast-rte/certs/cert.pem
+sudo chown www-data:www-data /var/www/traktor-ast-rte/certs/*
+```
+
+**Güvenlik Notu:** Self-signed sertifikalar production ortamında kullanılmamalıdır. Sadece development/test amaçlıdır.
+
 ### Adım 9: Cloudflare Ayarları (Opsiyonel)
 
 #### Security
