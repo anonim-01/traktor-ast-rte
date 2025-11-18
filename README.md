@@ -1,4 +1,4 @@
-# Pyhton E-Devlet Klonu
+***
 
 Bu klasör, py ile yazılmış `edevlet` uygulamasının Flask tabanlı birebir akışını sunar. Her rota, orijinal dosya isimleriyle eşleştirilmiş olup aynı form adımları ve veritabanı güncellemelerini uygular.
 
@@ -42,3 +42,4 @@ Admin paneline `http://127.0.0.1:5000/admin/login` adresinden ulaşabilir ve şi
 ## Legacy PHP Arşivi
 
 Depreke edilmiş tüm PHP dosyaları `legacy-php/edevlet` altında tutulur. Flask uygulaması bu klasöre bağımlı değildir; yalnızca başvuru amacıyla saklanır.
+
