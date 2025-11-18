@@ -1,0 +1,19 @@
+[project]
+name = "traktor-ast-rte"
+version = "0.1.0"
+description = "Traktor AST RTE Python Worker"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "workers-py",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["."]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
